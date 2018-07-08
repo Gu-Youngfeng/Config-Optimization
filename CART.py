@@ -1,5 +1,13 @@
 #!/usr/bin/python
 # coding=utf-8
+# Author: youngfeng
+# Update: 07/08/2018
+
+"""
+CART, proposed by Jianmei Guo et al. (ase '13), is one of the state-of-the-art methods in configuration performance prediction.
+It simply construct a regression tree to predict the preformance of each configuration.
+The details of CART are introduced in paper "Variability-aware performance prediction: statistical learning approach".
+"""
 
 import pandas as pd
 import random as rd
@@ -20,7 +28,11 @@ class config_node:
 
 
 def predict_by_CART(csv_file, fraction, seed):
-
+	"""
+	apply cart on project in csv_file, we split data in 2 parts, including
+	train_set(fraction), test_set(1-fraction)
+	then return the mmre of this run
+	"""
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -40,7 +52,7 @@ def predict_by_CART(csv_file, fraction, seed):
 
 	# step4: data split
 	# fraction = 0.3 # split fraction 
-	rd.seed(0) # random seed
+	rd.seed(seed) # random seed
 	rd.shuffle(configs) # shuffle the configs
 
 	indexes = range(len(configs))
@@ -77,7 +89,7 @@ def predict_by_CART(csv_file, fraction, seed):
 	print("[MMRE]: ", np.mean(mmre_lst))
 
 if __name__ == "__main__":
-	
+
 	projs = ["data/X264_AllMeasurements.csv", 
 			 "data/BDBC_AllMeasurements.csv", 
 			 "data/SQL_AllMeasurements.csv", 
