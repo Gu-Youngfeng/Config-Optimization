@@ -70,7 +70,29 @@ def predict_by_CART(csv_file, fraction, seed):
 	# 	print(config.index, " ", end="")
 
 	# step5: model building
-	cart_model = DecisionTreeRegressor()
+	# setting of minsplit and minbucket
+	S = len(train_set)
+	if S <= 100:
+		minbucket = np.floor((S/10)+(1/2))
+		minsplit = 2*minbucket
+	else:
+		minsplit = np.floor((S/10)+(1/2))
+		minbucket = np.floor(minsplit/2)
+
+	if minbucket < 2:
+		minbucket = 2
+	if minsplit < 4:
+		minsplit = 4
+
+	minbucket = int(minbucket) # cart cannot set a float minbucket or minsplit 
+	minsplit = int(minsplit)
+
+	print("[min samples split]: ", minsplit)
+	print("[min samples leaf] : ", minbucket)
+
+	cart_model = DecisionTreeRegressor( min_samples_split = minsplit,
+										min_samples_leaf = minbucket)
+
 	train_fea_vector = [i.features for i in train_set]
 	train_pef_vector = [i.perfs[-1] for i in train_set]
 	test_fea_vector = [i.features for i in test_set]
