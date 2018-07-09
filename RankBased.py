@@ -1,13 +1,13 @@
 #!\usr\bin\python
-# coding=utf-8
+#coding=utf-8
 # Author: youngfeng
-# Update: 07/08/2018
+# Update: 07/09/2018
 
 """
-Progressive, concluded by Sarkar et al. (ase '15), is one of the basic sampling techiques in performance prediction.
-It iteratively randomly select samples from train pool to train a cart model, and test on testing pool untill the 
-learning curve come to flatten/convergence point.
-The details of Progressive are introduced in paper "Cost-Efficient Sampling for Performance Prediction of Configurable Systems".
+Rank-based method, proposed by Nair et al. (fse '17), is a configuration optimazation approach.
+It uses relation-based measure (rank difference) instead of residual-based measure (mmre) to train 
+predictive model itertively.
+The details of Rank-based are introduced in paper "Using bad Learners to Find Good Configurations".
 """
 
 import pandas as pd
@@ -28,12 +28,14 @@ class config_node:
 	index    : actual rank
 	features : feature list
 	perfs    : actual performance
+	rank     : predicted rank
 	"""
-	def __init__(self, index, features, perfs, predicted):
+	def __init__(self, index, features, perfs, predicted, rank):
 		self.index = index
 		self.features = features
 		self.perfs = perfs
 		self.predicted = predicted
+		self.rank = rank
 
 
 def predict_by_cart(train_set, test_set):
@@ -70,28 +72,30 @@ def predict_by_cart(train_set, test_set):
 	cart_model.fit(train_fea_vector, train_pef_vector)
 	test_pef_predicted = cart_model.predict(test_fea_vector)
 
-	mmre_lst = []
-
+	# predicted performance to config_node.predicted
 	for (config, predicted_perf) in zip(test_set, test_pef_predicted):
 		config.predicted[-1] = predicted_perf
 
-	# for actual, predicted in zip(test_pef_vector, test_pef_predicted):
-	# 	mmre = abs(actual-predicted)/abs(actual)
-	# 	mmre_lst.append(mmre)
+	predicted_id = [[i,p] for i, p in enumerate(test_pef_predicted)]
+	perdicted_sorted = sorted(predicted_id, key=lambda x: x[-1])
+	predicted_rank_sorted = [[p[0], p[1], i] for i,p in enumerate(perdicted_sorted)] 
+	#p[0] actual rank, p[1] predicted performance, i predicted rank
+
+	for i in range(len(predicted_rank_sorted)):
+		test_set[predicted_rank_sorted[i][0]].rank = predicted_rank_sorted[i][2]
+
+	# predicted rank to config_node.rank
+
+	rd_lst = []
 
 	for config in test_set:
-		mmre = abs(config.perfs[-1] - config.predicted[-1])/abs(config.perfs[-1])
-		mmre_lst.append(mmre)
+		rd = abs(config.rank - config.index)
+		rd_lst.append(rd)
 
-	return np.mean(mmre_lst)
+	return np.mean(rd_lst)
 
 
-def predict_by_progressive(csv_file, fraction, seed):
-	"""
-	apply progressive on project in path, we split data into 3 parts, including
-	train_pool(fraction), test_pool(0.2), fraction(1-0.2-fraction)
-	then return the train_set to build the cart model
-	"""
+def predict_by_rank_based(csv_file, fraction, seed):
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -103,15 +107,16 @@ def predict_by_progressive(csv_file, fraction, seed):
 
 	# step3: collect configuration
 	configs = list()
-	for c in range(len(sortedcontent)):
-		configs.append(config_node(c, 
-									sortedcontent.iloc[c][features].tolist(),
-									sortedcontent.iloc[c][perfs].tolist(),
-									sortedcontent.iloc[c][perfs].tolist()
+	for c in range(len(pdcontent)):
+		configs.append(config_node(c, # actual rank
+									sortedcontent.iloc[c][features].tolist(), # feature list
+									sortedcontent.iloc[c][perfs].tolist(), # performance list
+									sortedcontent.iloc[c][perfs].tolist(), # predicted performance list
+									c # predicted rank
 			))
 
 	# for config in configs:
-	# 	print(config.index, "-", config.perfs)
+	# 	print(config.index, "-", config.perfs, "-", config.predicted, "-", config.rank)
 
 	# step4: data split
 	# fraction = 0.4 # split fraction 
@@ -143,46 +148,43 @@ def predict_by_progressive(csv_file, fraction, seed):
 	# step5: initilize train set
 	train_set = train_pool[:10]
 	count = 10
-	lives = 3
-	last_mmre = -1
+	lives = 4
+	last_rd = -1
+	collector = []
 
-	# step6: progressive cycle
-	while lives > 0 and count < len(train_pool):
-		# add sample to train set
+	while lives>0 and count<len(train_pool):
 		train_set.append(train_pool[count])
 		count = count + 1
 
-		current_mmre = predict_by_cart(train_set, test_pool)
-		print("[train]: ",count,", [accuracy]: ", (1-current_mmre))
-		COLLECTOR.append([count, (1-current_mmre)])
+		current_rd = predict_by_cart(train_set, test_pool)
 
-		if (1-current_mmre) <= last_mmre:
+		print("[train]: ",count,", [rank difference]: ", current_rd)
+
+		if current_rd >= last_rd:
 			lives = lives - 1
-		last_mmre = (1-current_mmre)
 
-		# if (1-current_mmre) > 0.9:
-		# 	break
+		last_rd = current_rd 
 
 	return train_set
 
-
 if __name__ == "__main__":
 
-	# apply progressive on proj
+	# apply rank-based method on proj 
 	print("### Testing on Test Pool: ")
-	train_set = predict_by_progressive("data/Apache_AllMeasurements.csv", 0.4, 0)
-	
+	train_set = predict_by_rank_based("data/Apache_AllMeasurements.csv", 0.4, 0)
+
 	print("\n--------------------")
 
 	# evaluate on validation pool
 	validation_pool = DATASETS[2]
-	mmre = predict_by_cart(train_set, validation_pool)
-	print("### Evaulation on Validation Pool: ", (1-mmre))
-	# sort the validation pool by predicted_perf
-	sorted_validation_pool = sorted(validation_pool, key=lambda x : x.predicted)
+	rd = predict_by_cart(train_set, validation_pool)
+	print("### Evaulation on Validation Pool: ", rd)
 
+	sorted_validation_pool = sorted(validation_pool, key=lambda x : x.rank)
+
+	# sort the validation pool by predicted_perf
 	for config in sorted_validation_pool:
-		print(config.index, ",", config.perfs, ",", config.predicted)
+		print(config.index, ",", config.perfs, ",", config.predicted, ",", config.rank)
 
 	# find the min rank in top-10
 	top_10_act_rank = []
@@ -190,16 +192,3 @@ if __name__ == "__main__":
 		top_10_act_rank.append(config.index)
 
 	print(np.min(top_10_act_rank))
-
-	# visualize the learning curve
-	len_dot = len(COLLECTOR)
-	x = []
-	y = []
-
-	for i in range(len_dot):
-		x.append(COLLECTOR[i][0])
-		y.append(COLLECTOR[i][1])
-
-	plt.plot(x, y)
-	plt.show()
-	

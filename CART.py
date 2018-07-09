@@ -71,27 +71,29 @@ def predict_by_CART(csv_file, fraction, seed):
 
 	# step5: model building
 	# setting of minsplit and minbucket
-	S = len(train_set)
-	if S <= 100:
-		minbucket = np.floor((S/10)+(1/2))
-		minsplit = 2*minbucket
-	else:
-		minsplit = np.floor((S/10)+(1/2))
-		minbucket = np.floor(minsplit/2)
+	# S = len(train_set)
+	# if S <= 100:
+	# 	minbucket = np.floor((S/10)+(1/2))
+	# 	minsplit = 2*minbucket
+	# else:
+	# 	minsplit = np.floor((S/10)+(1/2))
+	# 	minbucket = np.floor(minsplit/2)
 
-	if minbucket < 2:
-		minbucket = 2
-	if minsplit < 4:
-		minsplit = 4
+	# if minbucket < 2:
+	# 	minbucket = 2
+	# if minsplit < 4:
+	# 	minsplit = 4
 
-	minbucket = int(minbucket) # cart cannot set a float minbucket or minsplit 
-	minsplit = int(minsplit)
+	# minbucket = int(minbucket) # cart cannot set a float minbucket or minsplit 
+	# minsplit = int(minsplit)
 
-	print("[min samples split]: ", minsplit)
-	print("[min samples leaf] : ", minbucket)
+	# print("[min samples split]: ", minsplit)
+	# print("[min samples leaf] : ", minbucket)
 
-	cart_model = DecisionTreeRegressor( min_samples_split = minsplit,
-										min_samples_leaf = minbucket)
+	# cart_model = DecisionTreeRegressor( min_samples_split = minsplit,
+										# min_samples_leaf = minbucket)
+
+	cart_model = DecisionTreeRegressor()
 
 	train_fea_vector = [i.features for i in train_set]
 	train_pef_vector = [i.perfs[-1] for i in train_set]
@@ -104,20 +106,38 @@ def predict_by_CART(csv_file, fraction, seed):
 	# step6: calculate the mmre
 	mmre_lst = []
 	for actual, predicted in zip(test_pef_vector, test_pef_predicted):
-		mmre = abs(actual-predicted)/abs(actual)
-		mmre_lst.append(mmre)
-		# print(mmre)
+		if actual != 0:
+			mmre = abs(actual-predicted)/abs(actual)
+			mmre_lst.append(mmre)
+			# print(mmre)
 
-	print("[MMRE]: ", np.mean(mmre_lst))
+	# print("[MMRE]: ", np.mean(mmre_lst))
+	return np.mean(mmre_lst)
 
 if __name__ == "__main__":
 
+	# projects list
 	projs = ["data/X264_AllMeasurements.csv", 
-			 "data/BDBC_AllMeasurements.csv", 
-			 "data/SQL_AllMeasurements.csv", 
-			 "data/WGet.csv"]
+			 # "data/BDBC_AllMeasurements.csv", 
+			 # "data/SQL_AllMeasurements.csv", 
+			 # "data/WGet.csv"
+			 ]
 
-	for proj in projs:
-		print("dealing with %s"%proj)
-		predict_by_CART(proj, 0.3, 0)
-		print("")
+	# evaluate each project by running 20 times
+	mmre_lst = []
+	for i in range(len(projs)):	# for each project
+		mmre = []
+		for rand in range(1): # for 20 repeats
+			mmre_by_rand = predict_by_CART(projs[i], 0.3, rand)
+			mmre.append(mmre_by_rand)
+		mmre_lst.append(np.mean(mmre))
+		print("[project]:%s [mmre]:%f"%(projs[i], np.mean(mmre)))
+
+	# visualize the boxplot
+	import matplotlib.pyplot as plt
+	x = range(len(mmre_lst))
+	plt.bar(x, mmre_lst, log=True)
+	plt.ylim(0.1, 100)
+	plt.ylabel("MMRE (%)")
+	plt.xlabel("Software Systems")
+	plt.show()
