@@ -19,8 +19,6 @@ import matplotlib.pyplot as plt
 
 # global variable COLLECTOR, to save points in learning curve 
 COLLECTOR = []
-# global variable DATASETS, to save train_pool, test_pool, validation_pool
-DATASETS = []
 
 class config_node:
 	"""
@@ -94,8 +92,7 @@ def predict_by_cart(train_set, test_set):
 
 	return np.mean(rd_lst)
 
-
-def predict_by_rank_based(csv_file, fraction, seed):
+def split_data_by_fraction(csv_file, fraction, seed):
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -131,21 +128,11 @@ def predict_by_rank_based(csv_file, fraction, seed):
 	test_pool = [configs[i] for i in test_index]
 	validation_pool = [configs[i] for i in validation_index]
 
-	# DATASETS = [train_pool, test_pool, validation_pool]
-	DATASETS.append(train_pool)
-	DATASETS.append(test_pool)
-	DATASETS.append(validation_pool)
+	return [train_pool, test_pool, validation_pool]
 
-	# for config in train_pool:
-	# 	print(config.index, " ", end="")
-	# print("-------------")
-	# for config in test_pool:
-	# 	print(config.index, " ", end="")
-	# print("-------------")
-	# for config in validation_pool:
-	# 	print(config.index, " ", end="")
+def predict_by_rank_based(train_pool, test_pool):
 
-	# step5: initilize train set
+	# initilize train set
 	train_set = train_pool[:10]
 	count = 10
 	lives = 4
@@ -158,7 +145,7 @@ def predict_by_rank_based(csv_file, fraction, seed):
 
 		current_rd = predict_by_cart(train_set, test_pool)
 
-		print("[train]: ",count,", [rank difference]: ", current_rd)
+		# print("[train]: ",count,", [rank difference]: ", current_rd)
 
 		if current_rd >= last_rd:
 			lives = lives - 1
@@ -169,14 +156,19 @@ def predict_by_rank_based(csv_file, fraction, seed):
 
 if __name__ == "__main__":
 
+	# data split
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
+	train_pool = split_data[0]
+	test_pool = split_data[1]
+	validation_pool = split_data[2]
+
 	# apply rank-based method on proj 
 	print("### Testing on Test Pool: ")
-	train_set = predict_by_rank_based("data/Apache_AllMeasurements.csv", 0.4, 0)
+	train_set = predict_by_rank_based(train_pool, test_pool)
 
 	print("\n--------------------")
 
 	# evaluate on validation pool
-	validation_pool = DATASETS[2]
 	rd = predict_by_cart(train_set, validation_pool)
 	print("### Evaulation on Validation Pool: ", rd)
 

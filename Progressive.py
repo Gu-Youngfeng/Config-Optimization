@@ -85,13 +85,7 @@ def predict_by_cart(train_set, test_set):
 
 	return np.mean(mmre_lst)
 
-
-def predict_by_progressive(csv_file, fraction, seed):
-	"""
-	apply progressive on project in path, we split data into 3 parts, including
-	train_pool(fraction), test_pool(0.2), fraction(1-0.2-fraction)
-	then return the train_set to build the cart model
-	"""
+def split_data_by_fraction(csv_file, fraction, seed):
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -103,15 +97,15 @@ def predict_by_progressive(csv_file, fraction, seed):
 
 	# step3: collect configuration
 	configs = list()
-	for c in range(len(sortedcontent)):
-		configs.append(config_node(c, 
-									sortedcontent.iloc[c][features].tolist(),
-									sortedcontent.iloc[c][perfs].tolist(),
-									sortedcontent.iloc[c][perfs].tolist()
+	for c in range(len(pdcontent)):
+		configs.append(config_node(c, # actual rank
+									sortedcontent.iloc[c][features].tolist(), # feature list
+									sortedcontent.iloc[c][perfs].tolist(), # performance list
+									sortedcontent.iloc[c][perfs].tolist(), # predicted performance list
 			))
 
 	# for config in configs:
-	# 	print(config.index, "-", config.perfs)
+	# 	print(config.index, "-", config.perfs, "-", config.predicted, "-", config.rank)
 
 	# step4: data split
 	# fraction = 0.4 # split fraction 
@@ -126,21 +120,11 @@ def predict_by_progressive(csv_file, fraction, seed):
 	test_pool = [configs[i] for i in test_index]
 	validation_pool = [configs[i] for i in validation_index]
 
-	# DATASETS = [train_pool, test_pool, validation_pool]
-	DATASETS.append(train_pool)
-	DATASETS.append(test_pool)
-	DATASETS.append(validation_pool)
+	return [train_pool, test_pool, validation_pool]
 
-	# for config in train_pool:
-	# 	print(config.index, " ", end="")
-	# print("-------------")
-	# for config in test_pool:
-	# 	print(config.index, " ", end="")
-	# print("-------------")
-	# for config in validation_pool:
-	# 	print(config.index, " ", end="")
 
-	# step5: initilize train set
+def predict_by_progressive(train_pool, test_pool):
+
 	train_set = train_pool[:10]
 	count = 10
 	lives = 3
@@ -168,14 +152,18 @@ def predict_by_progressive(csv_file, fraction, seed):
 
 if __name__ == "__main__":
 
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
+	train_pool = split_data[0]
+	test_pool = split_data[1]
+	validation_pool = split_data[2]
+
 	# apply progressive on proj
 	print("### Testing on Test Pool: ")
-	train_set = predict_by_progressive("data/Apache_AllMeasurements.csv", 0.4, 0)
+	train_set = predict_by_progressive(train_pool, test_pool)
 	
 	print("\n--------------------")
 
 	# evaluate on validation pool
-	validation_pool = DATASETS[2]
 	mmre = predict_by_cart(train_set, validation_pool)
 	print("### Evaulation on Validation Pool: ", (1-mmre))
 	# sort the validation pool by predicted_perf

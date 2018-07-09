@@ -26,13 +26,7 @@ class config_node:
 		self.features = features
 		self.perfs = perfs
 
-
-def predict_by_CART(csv_file, fraction, seed):
-	"""
-	apply cart on project in csv_file, we split data in 2 parts, including
-	train_set(fraction), test_set(1-fraction)
-	then return the mmre of this run
-	"""
+def split_data_by_fraction(csv_file, fraction, seed):
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -61,6 +55,11 @@ def predict_by_CART(csv_file, fraction, seed):
 
 	train_set = [configs[i] for i in train_index]
 	test_set = [configs[i] for i in test_index]
+
+	return [train_set, test_set]
+
+
+def predict_by_CART(train_set, test_set):	
 
 	# print train_set and test_set
 	# for config in train_set:
@@ -116,28 +115,12 @@ def predict_by_CART(csv_file, fraction, seed):
 
 if __name__ == "__main__":
 
-	# projects list
-	projs = ["data/X264_AllMeasurements.csv", 
-			 # "data/BDBC_AllMeasurements.csv", 
-			 # "data/SQL_AllMeasurements.csv", 
-			 # "data/WGet.csv"
-			 ]
+	# split data
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.3, 0)
+	train_set = split_data[0]
+	test_set = split_data[1]
 
-	# evaluate each project by running 20 times
-	mmre_lst = []
-	for i in range(len(projs)):	# for each project
-		mmre = []
-		for rand in range(1): # for 20 repeats
-			mmre_by_rand = predict_by_CART(projs[i], 0.3, rand)
-			mmre.append(mmre_by_rand)
-		mmre_lst.append(np.mean(mmre))
-		print("[project]:%s [mmre]:%f"%(projs[i], np.mean(mmre)))
-
-	# visualize the boxplot
-	import matplotlib.pyplot as plt
-	x = range(len(mmre_lst))
-	plt.bar(x, mmre_lst, log=True)
-	plt.ylim(0.1, 100)
-	plt.ylabel("MMRE (%)")
-	plt.xlabel("Software Systems")
-	plt.show()
+	# evaluate project
+	mmre = predict_by_CART(train_set, test_set)
+	print("### Evaulation on Validation Pool: ", (1-mmre))
+	
