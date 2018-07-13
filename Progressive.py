@@ -35,6 +35,39 @@ class config_node:
 		self.perfs = perfs
 		self.predicted = predicted
 
+def find_lowest_rank(train_set, test_set):
+	"""
+	build cart model on train_set and predict on test_set, to find the lowest rank in predicted top-10 test_set
+	"""
+	sorted_test = sorted(test_set, key=lambda x: x.perfs[-1])
+    
+    # train data
+	train_features = [t.features for t in train_set]
+	train_perfs = [t.perfs[-1] for t in train_set]
+    
+    # test data
+	test_perfs = [t.features for t in sorted_test]
+
+	cart_model = DecisionTreeRegressor()
+	cart_model.fit(train_features, train_perfs)
+	predicted = cart_model.predict(test_perfs)
+
+	predicted_id = [[i, p] for i, p in enumerate(predicted)]
+    # i-> actual rank, p -> predicted value
+	predicted_sorted = sorted(predicted_id, key=lambda x: x[-1])
+    # print(predicted_sorted)
+    # assigning predicted ranks
+	predicted_rank_sorted = [[p[0], p[-1], i] for i,p in enumerate(predicted_sorted)]
+    # p[0] -> actual rank, p[-1] -> perdicted value, i -> predicted rank
+	select_few = predicted_rank_sorted[:10]
+
+	# print the predcited top-10 configuration 
+	for sf in select_few[:10]:
+		print("actual rank:", sf[0], " actual value:", sorted_test[sf[0]].perfs[-1], " predicted value:", sf[1], " predicted rank: ", sf[2])
+	print("------------")
+
+	return np.min([sf[0] for sf in select_few])
+
 
 def predict_by_cart(train_set, test_set):
 
@@ -62,9 +95,12 @@ def predict_by_cart(train_set, test_set):
 	# minbucket = int(minbucket) # cart cannot set a float minbucket or minsplit 
 	# minsplit = int(minsplit)
 
+	# print("[min samples split]: ", minsplit)
+	# print("[min samples leaf] : ", minbucket)
+
 	# cart_model = DecisionTreeRegressor( min_samples_split = minsplit,
-	# 									min_samples_leaf = minbucket)
-	#####################
+	# 									min_samples_leaf = minbucket,
+	# 									max_depth = 30)
 
 	cart_model = DecisionTreeRegressor()
 	cart_model.fit(train_fea_vector, train_pef_vector)
@@ -74,10 +110,6 @@ def predict_by_cart(train_set, test_set):
 
 	for (config, predicted_perf) in zip(test_set, test_pef_predicted):
 		config.predicted[-1] = predicted_perf
-
-	# for actual, predicted in zip(test_pef_vector, test_pef_predicted):
-	# 	mmre = abs(actual-predicted)/abs(actual)
-	# 	mmre_lst.append(mmre)
 
 	for config in test_set:
 		mmre = abs(config.perfs[-1] - config.predicted[-1])/abs(config.perfs[-1])
@@ -125,6 +157,7 @@ def split_data_by_fraction(csv_file, fraction, seed):
 
 def predict_by_progressive(train_pool, test_pool):
 
+	# rd.shuffle(train_pool)
 	train_set = train_pool[:10]
 	count = 10
 	lives = 3
@@ -137,14 +170,13 @@ def predict_by_progressive(train_pool, test_pool):
 		count = count + 1
 
 		current_mmre = predict_by_cart(train_set, test_pool)
-		print("[train]: ",count,", [accuracy]: ", (1-current_mmre))
 		COLLECTOR.append([count, (1-current_mmre)])
 
 		if (1-current_mmre) <= last_mmre:
 			lives = lives - 1
 		last_mmre = (1-current_mmre)
 
-		# if (1-current_mmre) > 0.9:
+		# if current_mmre < 0.1:
 		# 	break
 
 	return train_set
@@ -152,7 +184,9 @@ def predict_by_progressive(train_pool, test_pool):
 
 if __name__ == "__main__":
 
-	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
+	#######################################################################################
+
+	split_data = split_data_by_fraction("data/lrzip.csv", 0.4, 9)
 	train_pool = split_data[0]
 	test_pool = split_data[1]
 	validation_pool = split_data[2]
@@ -160,34 +194,30 @@ if __name__ == "__main__":
 	# apply progressive on proj
 	print("### Testing on Test Pool: ")
 	train_set = predict_by_progressive(train_pool, test_pool)
+	for config in train_set:
+		print(config.index, ",", end="")
 	
 	print("\n--------------------")
 
 	# evaluate on validation pool
 	mmre = predict_by_cart(train_set, validation_pool)
 	print("### Evaulation on Validation Pool: ", (1-mmre))
+
+	#######################################################################################
+	
 	# sort the validation pool by predicted_perf
-	sorted_validation_pool = sorted(validation_pool, key=lambda x : x.predicted)
-
-	for config in sorted_validation_pool:
-		print(config.index, ",", config.perfs, ",", config.predicted)
-
-	# find the min rank in top-10
-	top_10_act_rank = []
-	for config in sorted_validation_pool[:10]:
-		top_10_act_rank.append(config.index)
-
-	print(np.min(top_10_act_rank))
+	rk = find_lowest_rank(train_set, validation_pool)
+	print(rk)
 
 	# visualize the learning curve
-	len_dot = len(COLLECTOR)
-	x = []
-	y = []
+	# len_dot = len(COLLECTOR)
+	# x = []
+	# y = []
 
-	for i in range(len_dot):
-		x.append(COLLECTOR[i][0])
-		y.append(COLLECTOR[i][1])
+	# for i in range(len_dot):
+	# 	x.append(COLLECTOR[i][0])
+	# 	y.append(COLLECTOR[i][1])
 
-	plt.plot(x, y)
-	plt.show()
+	# plt.plot(x, y)
+	# plt.show()
 	

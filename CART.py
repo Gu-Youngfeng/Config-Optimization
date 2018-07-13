@@ -90,7 +90,8 @@ def predict_by_CART(train_set, test_set):
 	# print("[min samples leaf] : ", minbucket)
 
 	# cart_model = DecisionTreeRegressor( min_samples_split = minsplit,
-										# min_samples_leaf = minbucket)
+	# 									min_samples_leaf = minbucket,
+	# 									max_depth = 30)
 
 	cart_model = DecisionTreeRegressor()
 
@@ -116,7 +117,7 @@ def predict_by_CART(train_set, test_set):
 if __name__ == "__main__":
 
 	# split data
-	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.3, 0)
+	split_data = split_data_by_fraction("data/lrzip.csv", 0.3, 0)
 	train_set = split_data[0]
 	test_set = split_data[1]
 
