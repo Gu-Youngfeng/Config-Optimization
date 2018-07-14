@@ -61,9 +61,10 @@ def find_lowest_rank(train_set, test_set):
 	select_few = predicted_rank_sorted[:10]
 
 	# print the predcited top-10 configuration 
-	# for sf in select_few:
-	# 	print("actual rank:", sf[0], " actual value:", sorted_test[sf[0]].perfs[-1], " predicted value:", sf[1], " predicted rank:", sf[2])
-	
+	for sf in select_few:
+		print("actual rank:", sf[0], " actual value:", sorted_test[sf[0]].perfs[-1], " predicted value:", sf[1], " predicted rank:", sf[2])
+	print("-------------")
+
 	return np.min([sf[0] for sf in select_few])
 
 
