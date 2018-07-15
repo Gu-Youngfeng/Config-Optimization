@@ -1,5 +1,6 @@
 # Config-Optimization
-This project includes implementations of different configuration optimization methods in prior papers.
+This project includes implementations of different configuration optimization methods in prior papers. 
+Note that due to the randomness of each method, we can roughly replicate their experimental results in folder `/experiments/`. 
 
 ### 1. CART method
 
@@ -25,7 +26,7 @@ This project includes implementations of different configuration optimization me
 }
 ```
 
-### 2. progressive and projective methods
+### 2. Progressive & Projective methods
 
 ```java
 @inproceedings{DBLP:conf/kbse/SarkarGSAC15,
@@ -48,7 +49,7 @@ This project includes implementations of different configuration optimization me
 }
 ```
 
-### 3. rank-based method
+### 3. Rank-based method
 
 ```java
 @inproceedings{DBLP:conf/sigsoft/NairMSA17,
