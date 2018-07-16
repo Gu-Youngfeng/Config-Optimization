@@ -161,7 +161,7 @@ def predict_by_rank_based(train_pool, test_pool):
 	lives = 3
 	last_rd = sys.maxsize
 
-	while lives>=0 and count<len(train_pool):
+	while lives>=0 and (count+10)<len(train_pool):
 		train_set.append(train_pool[count])
 		count = count + 1
 

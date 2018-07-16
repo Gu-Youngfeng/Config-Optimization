@@ -21,18 +21,18 @@ x1 = range(len(data_1))
 plt.subplot(131)
 plt.scatter(x1, data_1, marker='o')
 plt.xticks(x1, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-plt.title("Data from csv file")
+plt.title("Data from Yaoyao")
 plt.ylabel("Rank Difference")
 plt.ylim(-5, 60)
 
 # data from my code
-data_2 = [0.25, 4.6500000000000004, 6.0499999999999998, 2.6000000000000001, 2.7999999999999998, 0.20000000000000001, 10.4, 4.7000000000000002, 19.649999999999999, 2.7000000000000002, 0.84999999999999998, 77.75, 0.0, 0.0, 0.0, 0.40000000000000002, 0.14999999999999999, 0.10000000000000001, 1.1000000000000001, 11.4, 1.75, 1.55, 1.8500000000000001]
+data_2 = [0.20000000000000001, 4.0, 2.0, 2.1499999999999999, 0.90000000000000002, 0.34999999999999998, 6.0999999999999996, 2.8999999999999999, 3.9500000000000002, 1.8500000000000001, 2.5499999999999998, 84.549999999999997, 0.29999999999999999, 0.20000000000000001, 0.0, 0.25, 0.0, 0.25, 0.25, 2.2000000000000002, 4.2000000000000002, 1.6000000000000001, 1.55]
 x2 = range(len(data_2))
 
 plt.subplot(132)
 plt.scatter(x2, data_2, marker='o')
 plt.xticks(x2, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-plt.title("Data from my code")
+plt.title("Data from Yongfeng")
 plt.ylim(-5, 60)
 
 # data from (Nair et al. 2017)
@@ -42,7 +42,7 @@ x3 = range(len(data_3))
 plt.subplot(133)
 plt.scatter(x3, data_3, marker='o')
 plt.xticks(x3, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-plt.title("Data from Nair et al.")
+plt.title("Data from Rank-based")
 plt.ylim(-5, 60)
 
 plt.show()
