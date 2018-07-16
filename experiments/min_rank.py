@@ -7,6 +7,8 @@
 This code is used to find the lowest rank in validation pool (top-10) by using rank based method
 """
 
+import sys
+sys.path.append("../")
 import os
 from RankBased import find_lowest_rank
 from RankBased import predict_by_rank_based
@@ -18,7 +20,7 @@ if __name__ == "__main__":
 
 	print(">> Using Rank-based Method to Predict the Validation Pool\n")
 
-	projects = ["data/"+name for name in os.listdir("data") if ".csv" in name]
+	projects = ["../data/"+name for name in os.listdir("../data") if ".csv" in name]
 	# projects = ["../data/Apache_AllMeasurements.csv"]
 	print(projects)
 
@@ -28,7 +30,7 @@ if __name__ == "__main__":
 		# for each project
 		print(proj)
 		ave_top_10_act_rank = []
-
+		ave_train_set = []
 		for round in range(20):
 			# data split
 			split_data = split_data_by_fraction(proj, 0.4, round)
@@ -39,6 +41,7 @@ if __name__ == "__main__":
 			# apply rank-based method on proj 
 			# print("### Testing on Test Pool: ")
 			train_set = predict_by_rank_based(train_pool, test_pool)
+			ave_train_set.append(len(train_set))
 
 			# print("\n--------------------")
 
@@ -56,6 +59,7 @@ if __name__ == "__main__":
 		minest_rank = np.mean(ave_top_10_act_rank)
 		print("[mean rank]: ", minest_rank, "\n")
 
+		# print("[train set]: ", ave_train_set, np.mean(ave_train_set))
 		ave_rank_lst.append(minest_rank)
 
 	print(ave_rank_lst)

@@ -24,7 +24,9 @@ if __name__ == "__main__":
 	# projects = ["../data/Apache_AllMeasurements.csv"]
 	print(projects)
 
-	for proj in projects[1:2]:
+	ave_rank_lst = []
+
+	for proj in projects:
 		# for each project
 		print(proj)
 		ave_top_10_act_rank = []
@@ -48,4 +50,9 @@ if __name__ == "__main__":
 			ave_top_10_act_rank.append(lowest_rank)
 
 		print("[mini rank]: ", ave_top_10_act_rank)
-		print("[mean rank]: ", np.mean(ave_top_10_act_rank), "\n")
+		minest_rank = np.mean(ave_top_10_act_rank)
+		print("[mean rank]: ", minest_rank, "\n")
+
+		ave_rank_lst.append(minest_rank)
+
+	print(ave_rank_lst)

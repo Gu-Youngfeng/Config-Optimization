@@ -155,12 +155,13 @@ def split_data_by_fraction(csv_file, fraction, seed):
 def predict_by_rank_based(train_pool, test_pool):
 
 	# initilize train set
+	# rd.shuffle(train_pool) # diff
 	train_set = train_pool[:10]
 	count = 10
 	lives = 3
 	last_rd = sys.maxsize
 
-	while lives>0 and count<len(train_pool):
+	while lives>=0 and count<len(train_pool):
 		train_set.append(train_pool[count])
 		count = count + 1
 
@@ -168,8 +169,10 @@ def predict_by_rank_based(train_pool, test_pool):
 
 		if current_rd >= last_rd:
 			lives = lives - 1
+		else:
+			lives = 3
 
-		last_rd = current_rd 
+		last_rd = current_rd
 
 	return train_set
 
@@ -179,7 +182,7 @@ if __name__ == "__main__":
 	#######################################################################################
 
 	# data split
-	split_data = split_data_by_fraction("data/lrzip.csv", 0.4, 0)
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
 	train_pool = split_data[0]
 	test_pool = split_data[1]
 	validation_pool = split_data[2]
@@ -194,9 +197,10 @@ if __name__ == "__main__":
 
 	# evaluate on validation pool
 	rd = predict_by_cart(train_set, validation_pool)
-	print("### Evaulation on Validation Pool: ", rd)
+	print("### Evaulation on Validation Pool: ")
+	print("[rank difference]:", rd)
 
 	#######################################################################################
 
 	lowest_rank = find_lowest_rank(train_set, validation_pool)
-	print(lowest_rank)
+	print("[ming rank]:", lowest_rank)

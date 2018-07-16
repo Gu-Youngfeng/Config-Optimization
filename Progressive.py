@@ -62,9 +62,9 @@ def find_lowest_rank(train_set, test_set):
 	select_few = predicted_rank_sorted[:10]
 
 	# print the predcited top-10 configuration 
-	for sf in select_few[:10]:
-		print("actual rank:", sf[0], " actual value:", sorted_test[sf[0]].perfs[-1], " predicted value:", sf[1], " predicted rank: ", sf[2])
-	print("------------")
+	# for sf in select_few[:10]:
+	# 	print("actual rank:", sf[0], " actual value:", sorted_test[sf[0]].perfs[-1], " predicted value:", sf[1], " predicted rank: ", sf[2])
+	# print("------------")
 
 	return np.min([sf[0] for sf in select_few])
 
@@ -174,6 +174,9 @@ def predict_by_progressive(train_pool, test_pool):
 
 		if (1-current_mmre) <= last_mmre:
 			lives = lives - 1
+		else:
+			lives = 3
+
 		last_mmre = (1-current_mmre)
 
 		# if current_mmre < 0.1:
@@ -186,7 +189,7 @@ if __name__ == "__main__":
 
 	#######################################################################################
 
-	split_data = split_data_by_fraction("data/lrzip.csv", 0.4, 9)
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
 	train_pool = split_data[0]
 	test_pool = split_data[1]
 	validation_pool = split_data[2]
@@ -201,23 +204,12 @@ if __name__ == "__main__":
 
 	# evaluate on validation pool
 	mmre = predict_by_cart(train_set, validation_pool)
-	print("### Evaulation on Validation Pool: ", (1-mmre))
+	print("### Evaulation on Validation Pool:")
+	print("[mmre]:", mmre)
 
 	#######################################################################################
 	
 	# sort the validation pool by predicted_perf
 	rk = find_lowest_rank(train_set, validation_pool)
-	print(rk)
+	print("[min rank]:", rk)
 
-	# visualize the learning curve
-	# len_dot = len(COLLECTOR)
-	# x = []
-	# y = []
-
-	# for i in range(len_dot):
-	# 	x.append(COLLECTOR[i][0])
-	# 	y.append(COLLECTOR[i][1])
-
-	# plt.plot(x, y)
-	# plt.show()
-	
