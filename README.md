@@ -1,6 +1,6 @@
 # Config-Optimization
 This project includes implementations of different configuration optimization methods in prior papers. 
-Note that due to the randomness of each method, we can roughly replicate their experimental results in folder `/experiments/`. 
+Note that due to the randomness of each method, we can only roughly replicate their experimental results in folder `/experiments/`. 
 
 ### 1. CART method
 
