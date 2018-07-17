@@ -114,7 +114,7 @@ def predict_by_cart(train_set, test_set):
 	rank_diffs = [abs(p[0] - p[-1]) for p in predicted_rank_sorted] 
 	return np.mean(rank_diffs) 
 
-def split_data_by_fraction(csv_file, fraction, seed):
+def split_data_by_fraction(csv_file, fraction):
 	# step1: read from csv file
 	pdcontent = pd.read_csv(csv_file) 
 	attr_list = pdcontent.columns # all feature list
@@ -139,7 +139,7 @@ def split_data_by_fraction(csv_file, fraction, seed):
 
 	# step4: data split
 	# fraction = 0.4 # split fraction 
-	rd.seed(seed) # random seed
+	# rd.seed(seed) # random seed
 	rd.shuffle(configs) # shuffle the configs
 	indexes = range(len(configs))
 	train_index = indexes[:int(fraction*len(configs))]
@@ -182,7 +182,7 @@ if __name__ == "__main__":
 	#######################################################################################
 
 	# data split
-	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4, 0)
+	split_data = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.4)
 	train_pool = split_data[0]
 	test_pool = split_data[1]
 	validation_pool = split_data[2]

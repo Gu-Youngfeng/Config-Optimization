@@ -97,7 +97,7 @@ def predict_by_cart(train_set, test_set):
 
 
 
-def split_data_by_fraction(csv_file, fraction, seed):
+def split_data_by_fraction(csv_file, fraction):
 	"""
 	split data set and return the 80% data
 	"""
@@ -124,7 +124,7 @@ def split_data_by_fraction(csv_file, fraction, seed):
 
 	# step4: data split
 	# fraction = 0.4 # split fraction 
-	rd.seed(seed) # random seed
+	# rd.seed(seed) # random seed
 	rd.shuffle(configs) # shuffle the configs
 	indexes = range(len(configs))
 	train_index = indexes[:int(fraction*len(configs))]
@@ -150,7 +150,7 @@ def predict_by_flash(dataset, size=30, budget=50):
 		
 		optimal_config = predict_by_cart(train_set, unevaluated_set)
 
-		print("[add]:", optimal_config.index)
+		# print("[add]:", optimal_config.index)
 		
 		unevaluated_set = remove_by_index(unevaluated_set, optimal_config.index)
 		
@@ -161,8 +161,11 @@ def predict_by_flash(dataset, size=30, budget=50):
 	return [train_set, unevaluated_set]
 
 if __name__ == "__main__":
+
+	#######################################################################################
+
 	# select 80% data
-	dataset = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.8, 1)
+	dataset = split_data_by_fraction("data/Apache_AllMeasurements.csv", 0.8)
 	print("### initialzation")
 	for i in dataset:
 		print(str(i.index), ",", end="")
@@ -178,6 +181,8 @@ if __name__ == "__main__":
 	for i in uneval_set:
 		print(str(i.index), ",", end="")
 	print("\n-------------")
+
+	#######################################################################################
 
 	lowest_rank = find_lowest_rank(train_set, uneval_set)
 

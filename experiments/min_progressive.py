@@ -31,9 +31,9 @@ if __name__ == "__main__":
 		print(proj)
 		ave_top_10_act_rank = []
 
-		for round in range(20):
+		for round in range(50):
 			# data split
-			split_data = split_data_by_fraction(proj, 0.4, round)
+			split_data = split_data_by_fraction(proj, 0.4)
 			train_pool = split_data[0]
 			test_pool = split_data[1]
 			validation_pool = split_data[2]
@@ -55,4 +55,5 @@ if __name__ == "__main__":
 
 		ave_rank_lst.append(minest_rank)
 
+	print("-------------------------------")
 	print(ave_rank_lst)
