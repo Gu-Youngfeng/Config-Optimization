@@ -57,12 +57,13 @@ import numpy as np
 # data = [6.0199999999999996, 36.859999999999999, 42.479999999999997, 63.060000000000002, 18.420000000000002, 7.0999999999999996, 70.739999999999995, 54.159999999999997, 41.299999999999997, 37.060000000000002, 748.27999999999997, 103.0, 5.3799999999999999, 4.0999999999999996, 4.7999999999999998, 4.7199999999999998, 4.2000000000000002, 4.7199999999999998, 16.460000000000001, 43.740000000000002, 47.560000000000002, 4.8200000000000003, 21.719999999999999]
 # x = range(len(data))
 
-# plt.xlabel("project")
-# plt.ylabel("same predicted top-1")
-# plt.ylim(0, 120)
+# plt.ylabel("configurations in log scale")
 
-# plt.bar(x, data)
+# plt.bar(x, data, log=True)
+# plt.ylim(0, 1000)
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.title("configurations predicted as optimal in each project")
+
 # plt.show()
 
 
@@ -136,41 +137,89 @@ import numpy as np
 # Figure 5: pearson correlation between (minR-mediaP),(mediaR-mediaP),rd and top-1
 ###########################################################################################
 
-from scipy import stats
+# from scipy import stats
 
-data_min_meida = [4.17,18.35,20.02,33.37,9.47,5.13,34.05,23.76,24.73,15.31,370.08,96.8,8.09,18.37,22.9,3.73,1.73,2.2,2.2,2.6,2.68,9.07,9.28]
-data_media_media = [7.96,108.87,160.5,119.87,25.8,7.42,185.2,73.74,63.54,62.88,535.22,949.42,13.31,92.59,63.92,5.09,2.39,3.11,3.1,3.26,3.62,19.66,19.31]
-data_rd = [1.42,10.86,11.38,6.5,3.42,0.64,18.8,3.56,17.04,6.82,3.56,47.72,2.08,6.54,11.26,0.6,0.2,0.46,0.3,0.6,0.28,2.36,2.12]
+# data_min_meida = [4.17,18.35,20.02,33.37,9.47,5.13,34.05,23.76,24.73,15.31,370.08,96.8,8.09,18.37,22.9,3.73,1.73,2.2,2.2,2.6,2.68,9.07,9.28]
+# data_media_media = [7.96,108.87,160.5,119.87,25.8,7.42,185.2,73.74,63.54,62.88,535.22,949.42,13.31,92.59,63.92,5.09,2.39,3.11,3.1,3.26,3.62,19.66,19.31]
+# data_rd = [1.42,10.86,11.38,6.5,3.42,0.64,18.8,3.56,17.04,6.82,3.56,47.72,2.08,6.54,11.26,0.6,0.2,0.46,0.3,0.6,0.28,2.36,2.12]
 
-data_top1 = [6.0199999999999996, 36.859999999999999, 42.479999999999997, 63.060000000000002, 18.420000000000002, 7.0999999999999996, 70.739999999999995, 54.159999999999997, 41.299999999999997, 37.060000000000002, 748.27999999999997, 103.0, 5.3799999999999999, 4.0999999999999996, 4.7999999999999998, 4.7199999999999998, 4.2000000000000002, 4.7199999999999998, 16.460000000000001, 43.740000000000002, 47.560000000000002, 4.8200000000000003, 21.719999999999999]
+# data_top1 = [6.0199999999999996, 36.859999999999999, 42.479999999999997, 63.060000000000002, 18.420000000000002, 7.0999999999999996, 70.739999999999995, 54.159999999999997, 41.299999999999997, 37.060000000000002, 748.27999999999997, 103.0, 5.3799999999999999, 4.0999999999999996, 4.7999999999999998, 4.7199999999999998, 4.2000000000000002, 4.7199999999999998, 16.460000000000001, 43.740000000000002, 47.560000000000002, 4.8200000000000003, 21.719999999999999]
 
-p_min_media = stats.pearsonr(data_top1, data_min_meida)
-p_media_media = stats.pearsonr(data_top1, data_media_media)
-p_rd = stats.pearsonr(data_top1, data_rd)
+# p_min_media = stats.pearsonr(data_top1, data_min_meida)
+# p_media_media = stats.pearsonr(data_top1, data_media_media)
+# p_rd = stats.pearsonr(data_top1, data_rd)
 
-print(p_media_media, p_media_media, p_rd)
+# print(p_media_media, p_media_media, p_rd)
 
-plt.subplot(131)
-plt.scatter(data_top1, data_min_meida)
-plt.ylim(0,120)
-plt.xlim(0,150)
-plt.xlabel("number of configurations predicted as top 1")
-plt.ylabel("(minR - mediaP)")
-plt.title("pearson correlation (p = 0.54)")
+# plt.subplot(131)
+# plt.scatter(data_top1, data_min_meida)
+# plt.ylim(0,120)
+# plt.xlim(0,150)
+# plt.xlabel("number of configurations predicted as top 1")
+# plt.ylabel("(minR - mediaP)")
+# plt.title("pearson correlation (p = 0.54)")
 
-plt.subplot(132)
-plt.scatter(data_top1, data_media_media)
-plt.ylim(0,210)
-plt.xlim(0,160)
-plt.xlabel("number of configurations predicted as top 1")
-plt.ylabel("(mediaR - mediaP)")
-plt.title("pearson correlation (p = 0.54)")
+# plt.subplot(132)
+# plt.scatter(data_top1, data_media_media)
+# plt.ylim(0,210)
+# plt.xlim(0,160)
+# plt.xlabel("number of configurations predicted as top 1")
+# plt.ylabel("(mediaR - mediaP)")
+# plt.title("pearson correlation (p = 0.54)")
 
-plt.subplot(133)
-plt.scatter(data_top1, data_rd)
-plt.ylim(0,50)
-plt.xlim(0,120)
-plt.xlabel("number of configurations predicted as top 1")
-plt.ylabel("rank difference")
-plt.title("pearson correlation (p = 0.06)")
-plt.show()
+# plt.subplot(133)
+# plt.scatter(data_top1, data_rd)
+# plt.ylim(0,50)
+# plt.xlim(0,120)
+# plt.xlabel("number of configurations predicted as top 1")
+# plt.ylabel("rank difference")
+# plt.title("pearson correlation (p = 0.06)")
+# plt.show()
+
+
+
+
+########################################################################################### 
+# Figure 6: statistics of 23 projects
+###########################################################################################
+
+# import pandas as pd
+# import os
+
+# projects = ["../data/" + file for file in os.listdir("../data") if ".csv" in file]
+# # print(projects)
+
+# proj_config = []
+# proj_features = []
+# for proj in projects:
+# 	pdcontent = pd.read_csv(proj)
+# 	proj_config.append(len(pdcontent))
+# 	proj_features.append(len(pdcontent.columns))
+# 	# print("[project]:", proj, "[configuration]:", len(pdcontent))
+# print("[configurations]:", proj_config)
+# print("[option    size]:",proj_features)
+
+# x = range(len(proj_config))
+
+# # subplot 1. configuration contained in each project
+# num_index = [2,3,6,7,8,9,12,13,14,15,16,17,18,19,20]
+# num_proj_config = [proj_config[i] for i in num_index]
+
+# plt.bar(x, proj_config, color="#239a3b")
+# plt.bar(num_index, num_proj_config, color="#0366d6")
+
+# plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.ylabel("configuration size")
+# # plt.ylim(10, 20000)
+# plt.title("configuration size in each project")
+# plt.legend(["boolean options","numeric options"])
+
+# plt.show()
+
+# # subplot 2. option size in each project
+# plt.bar(x, proj_features)
+# plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.ylabel("option size")
+# plt.title("option size in each project")
+
+# plt.show()
