@@ -57,12 +57,21 @@ import numpy as np
 # data = [6.0199999999999996, 36.859999999999999, 42.479999999999997, 63.060000000000002, 18.420000000000002, 7.0999999999999996, 70.739999999999995, 54.159999999999997, 41.299999999999997, 37.060000000000002, 748.27999999999997, 103.0, 5.3799999999999999, 4.0999999999999996, 4.7999999999999998, 4.7199999999999998, 4.2000000000000002, 4.7199999999999998, 16.460000000000001, 43.740000000000002, 47.560000000000002, 4.8200000000000003, 21.719999999999999]
 # x = range(len(data))
 
-# plt.ylabel("configurations in log scale")
+# index = [0,7,9,21]
+# data_t = [data[i] for i in index]
 
-# plt.bar(x, data, log=True)
+# index_2 = [10]
+# data_t_2 = [data[i] for i in index_2]
+
+# plt.ylabel("configurations")
+# plt.bar(x, data,color="green",log=True)
+# plt.bar(index, data_t, color="blue",log=True)
+# plt.bar(index_2, data_t_2, color="red", log=True)
 # plt.ylim(0, 1000)
+
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.title("configurations predicted as optimal in each project")
+# plt.title("configurations predicted as top 1 in each project")
+# plt.legend(["1 optimal config", "2 optimal configs", "1685 optimal configs"])
 
 # plt.show()
 
@@ -126,9 +135,13 @@ import numpy as np
 # x = range(len(data_min_meida))
 
 # plt.plot(x, data_min_meida, "b", x, data_media_media, "r", x, data_rd, "g")
-# plt.legend(["MinR-MediaP", "MediaR-MediaP", "Rank Difference"])
+# # plt.yscale('log')
 
+# plt.ylabel("rank difference")
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.title("Rank difference mearsured by 3 methods")
+# plt.legend(["MinR-MediaP", "MediaR-MediaP", "MinR (Nair 2017)"])
+
 # plt.show()
 
 
@@ -223,3 +236,112 @@ import numpy as np
 # plt.title("option size in each project")
 
 # plt.show()
+
+
+
+
+########################################################################################### 
+# Figure 7: the optimal configuration in 23 projects
+###########################################################################################
+
+# import pandas as pd
+# import os
+
+# projects = ["../data/" + file for file in os.listdir("../data") if ".csv" in file]
+# print(projects)
+
+# top_1_lst = []
+# ave_count_percent_lst = []
+
+# for proj in projects:
+# 	pdcontent = pd.read_csv(proj)
+	
+# 	attr = pdcontent.columns
+# 	feas = attr[:-1]
+# 	perf = attr[-1]
+# 	sortedcontent = pdcontent.sort_values(perf)
+# 	# print(features)
+
+# 	best_perf = sortedcontent.iloc[0][perf]
+
+# 	# print(best_perf)
+
+# 	best_config = []
+
+# 	for i in range(len(sortedcontent)):
+# 		if sortedcontent.iloc[i][perf] == best_perf:
+# 			best_config.append(sortedcontent.iloc[i])
+# 		else:
+# 			break
+
+# 	top_1 = len(best_config)
+# 	top_1_lst.append(top_1)
+# 	print(proj, ":", top_1)
+
+# 	count_percent_lst = []
+# 	for config in best_config:
+# 		print(">>", config[feas].tolist(), ":", config[perf])
+# 		count = 0
+# 		for i in config[feas].tolist():
+# 			if i == 0.0:
+# 				count += 1
+
+# 		count_percent = count/len(config[feas].tolist())
+# 		print("[zero options]:", count, "[zero percents]:", count_percent)
+# 		count_percent_lst.append(count_percent)
+
+# 	print("------------")
+# 	ave_count_percent_lst.append(np.mean(count_percent_lst))
+
+# print(top_1_lst)
+# print(ave_count_percent_lst)
+
+# x= range(len(ave_count_percent_lst))
+# plt.bar(x, ave_count_percent_lst)
+
+# plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.ylabel("zero option ratio")
+# # plt.ylim(10, 20000)
+# plt.title("zero option ratios in optimal configurations in each project")
+
+# plt.show()
+
+
+
+
+########################################################################################### 
+# Table 1: baisc info of 23 projects
+###########################################################################################
+
+import pandas as pd
+import os
+
+projects = ["../data/" + file for file in os.listdir("../data") if ".csv" in file]
+# print(projects)
+
+proj_config = []
+proj_features = []
+for proj in projects:
+	pdcontent = pd.read_csv(proj)
+	proj_config.append(len(pdcontent))
+	proj_features.append(len(pdcontent.columns))
+	# print("[project]:", proj, "[configuration]:", len(pdcontent))
+print("[configurations]:", proj_config)
+print("[option    size]:",proj_features)
+
+x = range(len(proj_config))
+
+# subplot 1. configuration contained in each project
+num_index = [2,3,6,7,8,9,12,13,14,15,16,17,18,19,20]
+from_index = [1 ,1 ,1 ,1 ,3 ,1 ,1 ,1 ,1 ,1 ,2 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ]
+
+projs = ['Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements']
+
+print("| Project | Features | Configurations | Feature Mode | Dataset |")
+print("| :-- | :-- | :-- | :-- | :-- | :-- |")
+for i in x:
+	isNumeric = "boolean"
+	if i in num_index:
+		isNumeric = "numeric"
+	print("|", projs[i], "|", proj_features[i], "|", proj_config[i], "|", isNumeric, "|", from_index[i], "|")
+
