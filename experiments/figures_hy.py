@@ -63,7 +63,7 @@ import numpy as np
 # index_2 = [10]
 # data_t_2 = [data[i] for i in index_2]
 
-# plt.ylabel("configurations")
+# plt.ylabel("configurations (in log scale)")
 # plt.bar(x, data,color="green",log=True)
 # plt.bar(index, data_t, color="blue",log=True)
 # plt.bar(index_2, data_t_2, color="red", log=True)
@@ -71,7 +71,7 @@ import numpy as np
 
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
 # plt.title("configurations predicted as top 1 in each project")
-# plt.legend(["1 optimal config", "2 optimal configs", "1685 optimal configs"])
+# plt.legend(["1 optimal", "2 optimals", "1685 optimals"])
 
 # plt.show()
 
@@ -139,8 +139,8 @@ import numpy as np
 
 # plt.ylabel("rank difference")
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.title("Rank difference mearsured by 3 methods")
-# plt.legend(["MinR-MediaP", "MediaR-MediaP", "MinR (Nair 2017)"])
+# plt.title("rank difference mearsured by 3 methods")
+# plt.legend(["RD1", "RD2", "RD3"])
 
 # plt.show()
 
@@ -169,7 +169,7 @@ import numpy as np
 # plt.ylim(0,120)
 # plt.xlim(0,150)
 # plt.xlabel("number of configurations predicted as top 1")
-# plt.ylabel("(minR - mediaP)")
+# plt.ylabel("RD1")
 # plt.title("pearson correlation (p = 0.54)")
 
 # plt.subplot(132)
@@ -177,7 +177,7 @@ import numpy as np
 # plt.ylim(0,210)
 # plt.xlim(0,160)
 # plt.xlabel("number of configurations predicted as top 1")
-# plt.ylabel("(mediaR - mediaP)")
+# plt.ylabel("RD2")
 # plt.title("pearson correlation (p = 0.54)")
 
 # plt.subplot(133)
@@ -185,7 +185,7 @@ import numpy as np
 # plt.ylim(0,50)
 # plt.xlim(0,120)
 # plt.xlabel("number of configurations predicted as top 1")
-# plt.ylabel("rank difference")
+# plt.ylabel("RD3")
 # plt.title("pearson correlation (p = 0.06)")
 # plt.show()
 
@@ -203,37 +203,51 @@ import numpy as np
 # # print(projects)
 
 # proj_config = []
-# proj_features = []
+# proj_fea = []
 # for proj in projects:
 # 	pdcontent = pd.read_csv(proj)
 # 	proj_config.append(len(pdcontent))
-# 	proj_features.append(len(pdcontent.columns))
+# 	proj_fea.append(len(pdcontent.columns)-1)
 # 	# print("[project]:", proj, "[configuration]:", len(pdcontent))
 # print("[configurations]:", proj_config)
-# print("[option    size]:",proj_features)
+# print("[option    size]:",proj_fea)
 
 # x = range(len(proj_config))
 
 # # subplot 1. configuration contained in each project
-# num_index = [2,3,6,7,8,9,12,13,14,15,16,17,18,19,20]
+# num_index = [6,7,8,9,12,13,14,15,16,17,18,19,20]
 # num_proj_config = [proj_config[i] for i in num_index]
+
+# hyb_index = [2,3]
+# hyb_proj_config = [proj_config[i] for i in hyb_index]
 
 # plt.bar(x, proj_config, color="#239a3b")
 # plt.bar(num_index, num_proj_config, color="#0366d6")
+# plt.bar(hyb_index, hyb_proj_config, color="red")
 
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.ylabel("configuration size")
+# plt.ylabel("configurations")
 # # plt.ylim(10, 20000)
-# plt.title("configuration size in each project")
-# plt.legend(["boolean options","numeric options"])
+# plt.title("configurations in each project")
+# plt.legend(["boolean project","numeric projects", "hybrid projects"])
 
 # plt.show()
 
 # # subplot 2. option size in each project
-# plt.bar(x, proj_features)
+# num_index = [6,7,8,9,12,13,14,15,16,17,18,19,20]
+# num_proj_fea = [proj_fea[i] for i in num_index]
+
+# hyb_index = [2,3]
+# hyb_proj_fea = [proj_fea[i] for i in hyb_index]
+
+# plt.bar(x, proj_fea, color="#239a3b")
+# plt.bar(num_index, num_proj_fea, color="#0366d6")
+# plt.bar(hyb_index, hyb_proj_fea, color="red")
+
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.ylabel("option size")
-# plt.title("option size in each project")
+# plt.ylabel("options")
+# plt.title("options in each project")
+# plt.legend(["boolean project","numeric projects", "hybrid projects"])
 
 # plt.show()
 
@@ -296,16 +310,19 @@ import numpy as np
 # print(top_1_lst)
 # print(ave_count_percent_lst)
 
+###################################################################
+
 # x= range(len(ave_count_percent_lst))
 # plt.bar(x, ave_count_percent_lst)
 
 # plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.ylabel("zero option ratio")
+# plt.ylabel("zero ratio")
 # # plt.ylim(10, 20000)
-# plt.title("zero option ratios in optimal configurations in each project")
+# plt.title("zero ratios in optimal configurations in each project")
 
 # plt.show()
 
+###################################################################
 
 # one_percent = [1/6, 1/6, 0, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 1/2]
 # x= range(len(one_percent))
@@ -318,6 +335,8 @@ import numpy as np
 
 # plt.show()
 
+###################################################################
+
 # zero_percent = [0.5, 0.66, 0.73, 0.84, 0.5, 0.28, 0.625, 0.5]
 # x= range(len(zero_percent))
 # plt.bar(x, zero_percent)
@@ -326,6 +345,28 @@ import numpy as np
 # plt.ylabel("ratio")
 # plt.ylim(0.0, 1.0)
 # plt.title("zero ratios in optimal configurations in boolean projects")
+
+# plt.show()
+
+###################################################################
+
+# zero_lowest_percent = [7/11, 11/14]
+# zero_percent = [6/8, 9/11]
+# lowest_persent = [1/3, 2/3] 
+
+# x= [1, 1.5]
+# x_2 = [i+0.1 for i in x]
+# x_3 = [i+0.2 for i in x]
+
+# plt.bar(x, zero_percent, width=0.1)
+# plt.bar(x_2, lowest_persent, width=0.1)
+# plt.bar(x_3, zero_lowest_percent, width=0.1)
+
+# plt.xticks(x, ('Dune', 'HSMGP_num'), rotation=90)
+# plt.ylabel("ratio")
+# plt.ylim(0.0, 1.0)
+# plt.title("zero/lowest ratios in optimal configurations in hybrid projects")
+# plt.legend(["zero ratio", "lowest ratio", "hybrid ratio"])
 
 # plt.show()
 
@@ -348,7 +389,7 @@ import numpy as np
 # for proj in projects:
 # 	pdcontent = pd.read_csv(proj)
 # 	proj_config.append(len(pdcontent))
-# 	proj_features.append(len(pdcontent.columns))
+# 	proj_features.append(len(pdcontent.columns)-1)
 # 	# print("[project]:", proj, "[configuration]:", len(pdcontent))
 # print("[configurations]:", proj_config)
 # print("[option    size]:",proj_features)
