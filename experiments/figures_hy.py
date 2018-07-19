@@ -307,41 +307,54 @@ import numpy as np
 # plt.show()
 
 
+one_percent = [1/6, 1/6, 0, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 1/2]
+x= range(len(one_percent))
+plt.bar(x, one_percent)
+
+plt.xticks(x, ('rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2'), rotation=90)
+plt.ylabel("one option ratio")
+# plt.ylim(10, 20000)
+plt.title("one option ratios in optimal configurations in 12 projects")
+
+plt.show()
+
+
+
 
 
 ########################################################################################### 
 # Table 1: baisc info of 23 projects
 ###########################################################################################
 
-import pandas as pd
-import os
+# import pandas as pd
+# import os
 
-projects = ["../data/" + file for file in os.listdir("../data") if ".csv" in file]
-# print(projects)
+# projects = ["../data/" + file for file in os.listdir("../data") if ".csv" in file]
+# # print(projects)
 
-proj_config = []
-proj_features = []
-for proj in projects:
-	pdcontent = pd.read_csv(proj)
-	proj_config.append(len(pdcontent))
-	proj_features.append(len(pdcontent.columns))
-	# print("[project]:", proj, "[configuration]:", len(pdcontent))
-print("[configurations]:", proj_config)
-print("[option    size]:",proj_features)
+# proj_config = []
+# proj_features = []
+# for proj in projects:
+# 	pdcontent = pd.read_csv(proj)
+# 	proj_config.append(len(pdcontent))
+# 	proj_features.append(len(pdcontent.columns))
+# 	# print("[project]:", proj, "[configuration]:", len(pdcontent))
+# print("[configurations]:", proj_config)
+# print("[option    size]:",proj_features)
 
-x = range(len(proj_config))
+# x = range(len(proj_config))
 
-# subplot 1. configuration contained in each project
-num_index = [2,3,6,7,8,9,12,13,14,15,16,17,18,19,20]
-from_index = [1 ,1 ,1 ,1 ,3 ,1 ,1 ,1 ,1 ,1 ,2 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ]
+# # subplot 1. configuration contained in each project
+# num_index = [2,3,6,7,8,9,12,13,14,15,16,17,18,19,20]
+# from_index = [1 ,1 ,1 ,1 ,3 ,1 ,1 ,1 ,1 ,1 ,2 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ,1 ]
 
-projs = ['Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements']
+# projs = ['Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements']
 
-print("| Project | Features | Configurations | Feature Mode | Dataset |")
-print("| :-- | :-- | :-- | :-- | :-- | :-- |")
-for i in x:
-	isNumeric = "boolean"
-	if i in num_index:
-		isNumeric = "numeric"
-	print("|", projs[i], "|", proj_features[i], "|", proj_config[i], "|", isNumeric, "|", from_index[i], "|")
+# print("| Project | Features | Configurations | Feature Mode | Dataset |")
+# print("| :-- | :-- | :-- | :-- | :-- | :-- |")
+# for i in x:
+# 	isNumeric = "boolean"
+# 	if i in num_index:
+# 		isNumeric = "numeric"
+# 	print("|", projs[i], "|", proj_features[i], "|", proj_config[i], "|", isNumeric, "|", from_index[i], "|")
 
