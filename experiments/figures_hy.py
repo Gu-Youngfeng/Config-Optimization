@@ -307,16 +307,27 @@ import numpy as np
 # plt.show()
 
 
-one_percent = [1/6, 1/6, 0, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 1/2]
-x= range(len(one_percent))
-plt.bar(x, one_percent)
+# one_percent = [1/6, 1/6, 0, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 2/3, 1/3, 1/2]
+# x= range(len(one_percent))
+# plt.bar(x, one_percent)
 
-plt.xticks(x, ('rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2'), rotation=90)
-plt.ylabel("one option ratio")
-# plt.ylim(10, 20000)
-plt.title("one option ratios in optimal configurations in 12 projects")
+# plt.xticks(x, ('rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2'), rotation=90)
+# plt.ylabel("ratio")
+# plt.ylim(0.0, 1.0)
+# plt.title("lowest ratios in optimal configurations in numeric projects")
 
-plt.show()
+# plt.show()
+
+# zero_percent = [0.5, 0.66, 0.73, 0.84, 0.5, 0.28, 0.625, 0.5]
+# x= range(len(zero_percent))
+# plt.bar(x, zero_percent)
+
+# plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'LLVM', 'lrzip', 'spear', 'SQL_AllMeasurements', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.ylabel("ratio")
+# plt.ylim(0.0, 1.0)
+# plt.title("zero ratios in optimal configurations in boolean projects")
+
+# plt.show()
 
 
 
