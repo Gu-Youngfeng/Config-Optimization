@@ -14,67 +14,139 @@ import numpy as np
 # Figure 1: min actual rank in top-10
 ##########################################################################################
 
-# # data from csv
-# data_1=[1.4199999999999999, 10.859999999999999, 11.380000000000001, 6.5, 3.4199999999999999, 0.64000000000000001, 18.800000000000001, 3.5600000000000001, 17.039999999999999, 6.8200000000000003, 3.5600000000000001, 47.719999999999999, 0.59999999999999998, 0.20000000000000001, 0.46000000000000002, 0.29999999999999999, 0.59999999999999998, 0.28000000000000003, 2.0800000000000001, 6.54, 11.26, 2.3599999999999999, 2.1200000000000001]
-# x1 = range(len(data_1))
+# # numeric projects
+# projs1 = ['noc', 'rs-6d-c3-obj1', 'rs-6d-c3-obj2', 'snw', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4-obj1', 'wc-3d-c4-obj2', 'wc-5d-c5-obj1', 'wc-5d-c5-obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'wc-c1-3d-c1-obj1', 'wc-c1-3d-c1-obj2', 'wc-c3-3d-c1-obj1', 'wc-c3-3d-c1-obj2']
+# # boolean projects
+# projs2 = ['AJStats', 'Apache', 'BerkeleyC', 'BerkeleyJ', 'clasp', 'Dune', 'Hipacc', 'HSMGP_num', 'LLVM', 'lrzip', 'sac', 'spear', 'SQL', 'WGet', 'x264', 'XZ']
 
-# plt.subplot(131)
-# plt.scatter(x1, data_1, marker='o')
-# plt.xticks(x1, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.title("Data from Yaoyao")
+# data11 = [5.1399999999999997, 108.88, 141.38, 5.0800000000000001, 145.18000000000001, 97.540000000000006, 14.84, 4.1200000000000001, 12.66, 4.2599999999999998, 19.82, 5.04, 34.640000000000001, 25.0, 99.599999999999994, 26.18, 289.48000000000002, 112.95999999999999, 76.959999999999994, 96.459999999999994, 89.159999999999997, 79.599999999999994]
+# data21 = [5746.1599999999999, 6.6399999999999997, 154.12, 11.699999999999999, 25.719999999999999, 126.02, 1212.76, 178.06, 74.700000000000003, 21.079999999999998, 54.719999999999999, 1010.08, 697.75999999999999, 24.800000000000001, 99.459999999999994, 88.560000000000002]
+
+# data15 = [1.5800000000000001, 38.740000000000002, 45.200000000000003, 1.5800000000000001, 56.560000000000002, 28.739999999999998, 2.96, 0.62, 2.48, 1.0, 3.2999999999999998, 0.73999999999999999, 7.6799999999999997, 6.3600000000000003, 28.359999999999999, 9.0, 68.459999999999994, 31.920000000000002, 12.68, 28.379999999999999, 31.719999999999999, 27.760000000000002]
+# data25 = [1795.0599999999999, 1.0600000000000001, 46.799999999999997, 2.8399999999999999, 6.6399999999999997, 37.460000000000001, 311.36000000000001, 58.100000000000001, 12.92, 3.2200000000000002, 11.56, 272.04000000000002, 284.16000000000003, 7.04, 28.800000000000001, 24.699999999999999]
+
+# data110 = [0.76000000000000001, 25.640000000000001, 30.800000000000001, 0.41999999999999998, 25.859999999999999, 16.280000000000001, 1.74, 0.23999999999999999, 1.3200000000000001, 0.52000000000000002, 1.3, 0.29999999999999999, 4.04, 3.2599999999999998, 12.880000000000001, 4.6200000000000001, 25.52, 18.239999999999998, 7.7599999999999998, 15.619999999999999, 19.120000000000001, 12.300000000000001]
+# data210 = [807.63999999999999, 0.29999999999999999, 25.280000000000001, 1.28, 4.1200000000000001, 19.5, 202.5, 25.140000000000001, 6.9800000000000004, 1.48, 7.7800000000000002, 156.12, 140.38, 3.3799999999999999, 18.760000000000002, 15.779999999999999]
+
+# data120 = [0.76000000000000001, 25.640000000000001, 30.800000000000001, 0.41999999999999998, 25.859999999999999, 16.280000000000001, 1.74, 0.23999999999999999, 1.3200000000000001, 0.52000000000000002, 1.3, 0.29999999999999999, 4.04, 3.2599999999999998, 12.880000000000001, 4.6200000000000001, 25.52, 18.239999999999998, 7.7599999999999998, 15.619999999999999, 19.120000000000001, 12.300000000000001]
+# data220 = [807.63999999999999, 0.29999999999999999, 25.280000000000001, 1.28, 4.1200000000000001, 19.5, 202.5, 25.140000000000001, 6.9800000000000004, 1.48, 7.7800000000000002, 156.12, 140.38, 3.3799999999999999, 18.760000000000002, 15.779999999999999]
+
+# projs = projs1 + projs2
+
+# data_1 = data11 + data21
+
+# data_5 = data15 + data25
+
+# data_10 = data110 + data210
+
+# data_20 = data120 + data220
+
+# # if you want to delete some project
+# del_lst = [0, 3]
+# offside = 0
+# for i in del_lst:
+# 	del projs[i - offside]
+# 	del data_1[i - offside]
+# 	del data_5[i - offside]
+# 	del data_10[i - offside]
+# 	del data_20[i - offside]
+# 	offside += 1
+
+# x1 = range(len(projs))
+
+# plt.plot(x1, data_1, x1, data_5, x1, data_10, x1, data_20)
+# plt.xticks(x1, tuple(projs), rotation=90)
+# plt.title("minRank by selecting top-k configurations")
+# # plt.yscale("log")
 # plt.ylabel("Rank Difference")
-# plt.ylim(-5, 60)
-
-# # data from my code
-# data_2 = [0.20000000000000001, 4.0, 2.0, 2.1499999999999999, 0.90000000000000002, 0.34999999999999998, 6.0999999999999996, 2.8999999999999999, 3.9500000000000002, 1.8500000000000001, 2.5499999999999998, 84.549999999999997, 0.29999999999999999, 0.20000000000000001, 0.0, 0.25, 0.0, 0.25, 0.25, 2.2000000000000002, 4.2000000000000002, 1.6000000000000001, 1.55]
-# x2 = range(len(data_2))
-
-# plt.subplot(132)
-# plt.scatter(x2, data_2, marker='o')
-# plt.xticks(x2, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.title("Data from Yongfeng")
-# plt.ylim(-5, 60)
-
-# # data from (Nair et al. 2017)
-# data_3 = [0.29999999999999999, 5.5499999999999998, 7.3499999999999996, 4.2999999999999998, 2.6000000000000001, 0.050000000000000003, 27.25, 7.4000000000000004, 15.800000000000001, 7.6500000000000004, 4.0, 52.549999999999997, 0.59999999999999998, 0.65000000000000002, 0.34999999999999998, 0.25, 0.65000000000000002, 0.34999999999999998, 1.2, 16.300000000000001, 4.0, 3.3500000000000001, 1.3]
-# x3 = range(len(data_3))
-
-# plt.subplot(133)
-# plt.scatter(x3, data_3, marker='o')
-# plt.xticks(x3, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-# plt.title("Data from Rank-based")
-# plt.ylim(-5, 60)
+# plt.legend(["k = 1","k = 5","k = 10","k = 20"])
 
 # plt.show()
-
-
 
 
 ########################################################################################## 
 # Figure 2: nums of configurations predicted as top 1
 ##########################################################################################
 
-# data = [6.0199999999999996, 36.859999999999999, 42.479999999999997, 63.060000000000002, 18.420000000000002, 7.0999999999999996, 70.739999999999995, 54.159999999999997, 41.299999999999997, 37.060000000000002, 748.27999999999997, 103.0, 5.3799999999999999, 4.0999999999999996, 4.7999999999999998, 4.7199999999999998, 4.2000000000000002, 4.7199999999999998, 16.460000000000001, 43.740000000000002, 47.560000000000002, 4.8200000000000003, 21.719999999999999]
-# x = range(len(data))
+# # numeric projects
+# projs1 = ['noc', 'rs-6d-c3-obj1', 'rs-6d-c3-obj2', 'snw', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4-obj1', 'wc-3d-c4-obj2', 'wc-5d-c5-obj1', 'wc-5d-c5-obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'wc-c1-3d-c1-obj1', 'wc-c1-3d-c1-obj2', 'wc-c3-3d-c1-obj1', 'wc-c3-3d-c1-obj2']
+# # boolean projects
+# projs2 = ['AJStats', 'Apache', 'BerkeleyC', 'BerkeleyJ', 'clasp', 'Dune', 'Hipacc', 'HSMGP_num', 'LLVM', 'lrzip', 'sac', 'spear', 'SQL', 'WGet', 'x264', 'XZ']
 
-# index = [0,7,9,21]
-# data_t = [data[i] for i in index]
 
-# index_2 = [10]
-# data_t_2 = [data[i] for i in index_2]
+# data_1 = [5.0999999999999996, 66.780000000000001, 73.180000000000007, 4.0599999999999996, 51.640000000000001, 30.260000000000002, 5.6399999999999997, 4.0, 4.2999999999999998, 3.46, 5.04, 4.0599999999999996, 14.6, 13.119999999999999, 26.68, 20.34, 49.219999999999999, 41.960000000000001, 22.82, 24.539999999999999, 23.559999999999999, 23.02]
+
+
+# data_2 = [763.41999999999996, 5.3799999999999999, 50.340000000000003, 3.8599999999999999, 10.779999999999999, 33.659999999999997, 299.98000000000002, 43.700000000000003, 24.280000000000001, 9.0800000000000001, 18.140000000000001, 431.24000000000001, 67.340000000000003, 4.4199999999999999, 42.359999999999999, 21.920000000000002]
+
+
+# # if you want to delete some project
+# del_lst = [0, 3]
+# offside = 0
+# for i in del_lst:
+# 	del projs1[i - offside]
+# 	del data_1[i - offside]
+# 	offside += 1
+
+# x1 = len(projs1)
+# x2 = len(projs2)
+
+# x = range(x1+x2)
 
 # plt.ylabel("configurations (in log scale)")
-# plt.bar(x, data,color="green",log=True)
-# plt.bar(index, data_t, color="blue",log=True)
-# plt.bar(index_2, data_t_2, color="red", log=True)
+# plt.bar(x[:x1], data_1,color="green",log=True)
+# plt.bar(x[x1:], data_2, color="blue",log=True)
+
 # plt.ylim(0, 1000)
 
-# plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'LLVM', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'spear', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
+# plt.xticks(x, tuple(projs1 + projs2), rotation=90)
 # plt.title("configurations predicted as top 1 in each project")
-# plt.legend(["1 optimal", "2 optimals", "1685 optimals"])
+# plt.legend(["numeric", "boolean"])
 
 # plt.show()
 
+
+###########################################################################################################
+#
+#  Nair's Faulty Sorting
+#
+######################
+
+# # numeric projects
+# projs1 = ['noc', 'rs-6d-c3-obj1', 'rs-6d-c3-obj2', 'snw', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4-obj1', 'wc-3d-c4-obj2', 'wc-5d-c5-obj1', 'wc-5d-c5-obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'wc-c1-3d-c1-obj1', 'wc-c1-3d-c1-obj2', 'wc-c3-3d-c1-obj1', 'wc-c3-3d-c1-obj2']
+# # boolean projects
+# projs2 = ['AJStats', 'Apache', 'BerkeleyC', 'BerkeleyJ', 'clasp', 'Dune', 'Hipacc', 'HSMGP_num', 'LLVM', 'lrzip', 'sac', 'spear', 'SQL', 'WGet', 'x264', 'XZ']
+
+# projs = projs1 + projs2
+
+# data_own = [0.76, 25.64, 30.8, 0.42, 16.28, 25.86, 1.74, 0.24, 1.32, 0.52, 1.3, 0.3, 4.04, 3.26, 12.88, 4.62, 25.52, 18.24, 7.76, 15.62, 19.12, 12.3, 807.64, 0.3, 25.28, 1.28, 4.12, 19.5, 202.5, 25.14, 6.98, 1.48, 7.78, 156.12, 140.38, 3.38, 18.76, 15.78]
+
+# data_nair = [0.5, 12.66, 9.38, 0.34, 8.18, 11.04, 1.52, 0.2, 0.96, 0.4, 1.08, 0.14, 1.92, 2.1, 5.72, 2.24, 6.08, 6.84, 2.82, 7.96, 9.82, 3.8, 42.62, 0.18, 14.06, 0.8, 3.04, 9.26, 31.86, 8.38, 3.14, 1.04, 4.44, 17.02, 52.86, 2.66, 5.48, 9.72]
+
+
+# # if you want to delete some project
+# del_lst = [0, 3]
+# offside = 0
+# for i in del_lst:
+# 	del projs[i - offside]
+# 	del data_own[i - offside]
+# 	del data_nair[i - offside]
+# 	offside += 1
+
+# x = range(len(projs))
+
+# plt.ylabel("Rank Difference (in log scale)")
+# plt.plot(x, data_own)
+# plt.plot(x, data_nair)
+
+# plt.yscale("log")
+# plt.ylim(0, 1000)
+
+# plt.xticks(x, tuple(projs), rotation=90)
+# plt.title("Faulty Sort used by Nair et al.")
+# plt.legend(["Shuffled sort", "Nair's sort"])
+
+# plt.show()
 
 
 ########################################################################################### 
@@ -427,17 +499,17 @@ import numpy as np
 
 # plt.show()
 
-rd = [0.050000000000000003, 18.600000000000001, 13.9, 7.0499999999999998, 0.94999999999999996, 15.449999999999999, 9.1999999999999993, 9.9499999999999993, 6.25, 56.25, 0.29999999999999999, 0.40000000000000002, 0.0, 0.5, 0.59999999999999998, 0.20000000000000001, 0.40000000000000002, 8.5999999999999996, 12.5, 2.0499999999999998, 3.7000000000000002]
-x =range(len(rd))
 
-for i in x:
-	if rd[i]>=8:
-		plt.scatter(i, rd[i], color="red")
-	else:
-		plt.scatter(i, rd[i], color="blue")
 
-plt.xticks(x, ('Apache_AllMeasurements', 'BDBC_AllMeasurements', 'Dune', 'HSMGP_num', 'lrzip', 'rs-6d-c3_obj1', 'rs-6d-c3_obj2', 'sol-6d-c2-obj1', 'sol-6d-c2-obj2', 'SQL_AllMeasurements', 'wc+rs-3d-c4-obj1', 'wc+rs-3d-c4-obj2', 'wc+sol-3d-c4-obj1', 'wc+sol-3d-c4-obj2', 'wc+wc-3d-c4-obj1', 'wc+wc-3d-c4-obj2', 'wc-3d-c4_obj2', 'wc-6d-c1-obj1', 'wc-6d-c1-obj2', 'WGet', 'X264_AllMeasurements'), rotation=90)
-plt.ylabel("Rank Difference (RD)")
-plt.title("Rank-based")
-plt.legend(["RD < 8", "RD > 8"])
-plt.show()
+########################################################################################### 
+# BUG: Find bug in find_lowesr_rank(train, test)
+###########################################################################################
+# import random as rd
+# predicted = [350,150,150,700,600,150,150,150,150,150,150,150]
+
+# predicted_id = [[(i+1), p] for i, p in enumerate(predicted)]
+# # rd.shuffle(predicted_id)
+# predicted_sorted = sorted(predicted_id, key=lambda x: x[-1])
+
+# print(predicted_sorted)
+
